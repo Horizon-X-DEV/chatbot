@@ -1,41 +1,124 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#100d20">
+    <meta name="description" content="Gatha AI - Your pixel-powered AI assistant.">
+
+    <title>Gatha AI — Pixel Edition</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-    <title>Chat-Bot By HorizonX</title>
 </head>
 
 <body>
+    <div class="app-container">
 
-    <div class="container">
-        <div class="header">
-            <h3>Chat-Bot By HorizonX</h3>
-        </div>
+        <!-- HEADER -->
+        <header class="header">
 
-        <div class="info">
-            <h1>HorizonX</h1>
-        </div>
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
 
-        <div class="chat-container">
-            <div id="chat-log"></div>
-        </div>
+                <div class="brand-info">
+                    <h2>GATHA<span></span></h2>
+                    <p>PIXEL EDITION</p>
+                </div>
+            </div>
 
-        <div class="input-container">
-            <input type="text" id="user-input" placeholder="Send a message.">
-            <button id="send-button">
-                <i class="fa-solid fa-paper-plane" id="button-icon"></i>
-            </button>
-        </div>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>ONLINE</span>
+            </div>
+
+        </header>
+
+
+        <!-- MAIN CHAT -->
+        <main class="main-content">
+
+            <!-- WELCOME SCREEN -->
+            <section class="info">
+
+                <div class="welcome-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+
+                <p class="welcome-label">WELCOME TO</p>
+
+                <h1>Chatbot</h1>
+
+                <p class="welcome-description">
+                    Your pixel-powered AI assistant.
+                    Ask anything and let's explore!
+                </p>
+
+                <div class="welcome-decoration">
+                    <span>◆</span>
+                    <span>◆</span>
+                    <span>◆</span>
+                </div>
+
+            </section>
+
+
+            <!-- CHAT AREA -->
+            <section class="chat-container">
+
+                <div id="chat-log"></div>
+
+            </section>
+
+        </main>
+
+
+        <!-- INPUT AREA -->
+        <footer class="input-container">
+
+            <div class="input-wrapper">
+
+                <input
+                    type="text"
+                    id="user-input"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                >
+
+                <button id="send-button" aria-label="Send message">
+
+                    <i class="fa-solid fa-paper-plane" id="button-icon"></i>
+
+                </button>
+
+            </div>
+
+            <p class="footer-text">
+                <i class="fa-solid fa-bolt"></i>
+                POWERED BY GATHA AI
+            </p>
+
+        </footer>
 
     </div>
 
 
+    <!-- JAVASCRIPT -->
     <script src="index.js"></script>
-</body>
 
+</body>
 </html>
