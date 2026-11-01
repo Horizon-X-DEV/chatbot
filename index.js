@@ -53,24 +53,32 @@ async function sendMessage() {
             })
         });
 
-        const result = await response.json();
+        const rawResponse = await response.text();
+
+        let result;
+
+        try {
+            result = JSON.parse(rawResponse);
+        } catch {
+            throw new Error('Respons bukan JSON: ' + rawResponse);
+        }
 
         if (!response.ok) {
             throw new Error(
-                result.error || `HTTP Error: ${response.status}`
+                result.error || rawResponse || `HTTP Error: ${response.status}`
             );
         }
 
-        // Mengambil jawaban dari format respons RapidAPI
         const botMessage = result.result;
 
-        if (!botMessage) {
-            throw new Error(
-                'API tidak memberikan jawaban. Periksa respons API.'
+        if (typeof botMessage === 'string' && botMessage.trim() !== '') {
+            appendMessage('bot', botMessage);
+        } else {
+            appendMessage(
+                'bot',
+                'RESPONS API:\n' + JSON.stringify(result, null, 2)
             );
         }
-
-        appendMessage('bot', botMessage);
 
     } catch (error) {
         console.error('Chatbot Error:', error);
