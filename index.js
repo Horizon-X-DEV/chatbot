@@ -56,20 +56,30 @@ async function sendMessage() {
         const result = await response.json();
 
         if (!response.ok) {
-            throw new Error(result.error || `HTTP Error: ${response.status}`);
+            throw new Error(
+                result.error || `HTTP Error: ${response.status}`
+            );
         }
 
-        const botMessage = result.choices?.[0]?.message?.content;
+        // Mengambil jawaban dari format respons RapidAPI
+        const botMessage = result.result;
 
         if (!botMessage) {
-            throw new Error('Format jawaban API tidak sesuai.');
+            throw new Error(
+                'API tidak memberikan jawaban. Periksa respons API.'
+            );
         }
 
         appendMessage('bot', botMessage);
 
     } catch (error) {
-        console.error(error);
-        appendMessage('bot', 'Maaf, terjadi kesalahan: ' + error.message);
+        console.error('Chatbot Error:', error);
+
+        appendMessage(
+            'bot',
+            'Maaf, terjadi kesalahan: ' + error.message
+        );
+
     } finally {
         isLoading = false;
         setLoading(false);
