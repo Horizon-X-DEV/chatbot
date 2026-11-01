@@ -1,8 +1,10 @@
+
 const chatLog = document.getElementById('chat-log');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 const buttonIcon = document.getElementById('button-icon');
 const info = document.querySelector('.info');
+const chatContainer = document.querySelector('.chat-container');
 
 const API_URL = 'https://chatbot-api-gatha.akunalt2727.workers.dev';
 
@@ -11,7 +13,8 @@ let isLoading = false;
 sendButton.addEventListener('click', sendMessage);
 
 userInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
         sendMessage();
     }
 });
@@ -19,23 +22,15 @@ userInput.addEventListener('keydown', (event) => {
 async function sendMessage() {
     const message = userInput.value.trim();
 
-    if (message === '' || isLoading) return;
-
-    if (message === 'developer') {
-        userInput.value = '';
-        appendMessage('user', message);
-        appendMessage(
-            'bot',
-            'This Source Coded By Reza Mehdikhanlou\nYoutube : @AsmrProg'
-        );
-        return;
-    }
+    if (!message || isLoading) return;
 
     appendMessage('user', message);
     userInput.value = '';
 
     isLoading = true;
     setLoading(true);
+
+    const loadingMessage = appendTyping();
 
     try {
         const response = await fetch(API_URL, {
@@ -72,16 +67,16 @@ async function sendMessage() {
         const botMessage = result.result;
 
         if (typeof botMessage === 'string' && botMessage.trim() !== '') {
+            removeTyping(loadingMessage);
             appendMessage('bot', botMessage);
         } else {
-            appendMessage(
-                'bot',
-                'RESPONS API:\n' + JSON.stringify(result, null, 2)
-            );
+            throw new Error('Format jawaban API tidak sesuai');
         }
 
     } catch (error) {
         console.error('Chatbot Error:', error);
+
+        removeTyping(loadingMessage);
 
         appendMessage(
             'bot',
@@ -91,39 +86,44 @@ async function sendMessage() {
     } finally {
         isLoading = false;
         setLoading(false);
+        userInput.focus();
     }
 }
 
+/* LOADING BUTTON */
+
 function setLoading(loading) {
+    sendButton.disabled = loading;
+
     if (loading) {
-        buttonIcon.classList.remove('fa-solid', 'fa-paper-plane');
-        buttonIcon.classList.add('fas', 'fa-spinner', 'fa-pulse');
+        buttonIcon.className = 'fas fa-spinner fa-spin';
     } else {
-        buttonIcon.classList.add('fa-solid', 'fa-paper-plane');
-        buttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
+        buttonIcon.className = 'fa-solid fa-paper-plane';
     }
 }
+
+/* APPEND MESSAGE */
 
 function appendMessage(sender, message) {
     info.style.display = 'none';
 
-    const messageElement = document.createElement('div');
-    const iconElement = document.createElement('div');
     const chatElement = document.createElement('div');
+    const iconElement = document.createElement('div');
+    const messageElement = document.createElement('div');
     const icon = document.createElement('i');
 
-    chatElement.classList.add('chat-box');
-    iconElement.classList.add('icon');
-    messageElement.classList.add(sender);
+    chatElement.className = 'chat-box';
+    iconElement.className = 'icon';
+    messageElement.className = sender;
 
-    messageElement.innerText = message;
+    messageElement.textContent = message;
 
     if (sender === 'user') {
-        icon.classList.add('fa-regular', 'fa-user');
-        iconElement.setAttribute('id', 'user-icon');
+        icon.className = 'fa-regular fa-user';
+        iconElement.id = 'user-icon';
     } else {
-        icon.classList.add('fa-solid', 'fa-robot');
-        iconElement.setAttribute('id', 'bot-icon');
+        icon.className = 'fa-solid fa-robot';
+        iconElement.id = 'bot-icon';
     }
 
     iconElement.appendChild(icon);
@@ -131,5 +131,63 @@ function appendMessage(sender, message) {
     chatElement.appendChild(messageElement);
 
     chatLog.appendChild(chatElement);
-    chatLog.scrollTop = chatLog.scrollHeight;
+
+    scrollToBottom();
+
+    return chatElement;
+}
+
+/* TYPING ANIMATION */
+
+function appendTyping() {
+    info.style.display = 'none';
+
+    const chatElement = document.createElement('div');
+    const iconElement = document.createElement('div');
+    const typingElement = document.createElement('div');
+    const icon = document.createElement('i');
+
+    chatElement.className = 'chat-box';
+
+    iconElement.className = 'icon';
+    iconElement.id = 'bot-icon';
+
+    icon.className = 'fa-solid fa-robot';
+
+    typingElement.className = 'bot typing-indicator';
+
+    typingElement.innerHTML = `
+        <span></span>
+        <span></span>
+        <span></span>
+    `;
+
+    iconElement.appendChild(icon);
+    chatElement.appendChild(iconElement);
+    chatElement.appendChild(typingElement);
+
+    chatLog.appendChild(chatElement);
+
+    scrollToBottom();
+
+    return chatElement;
+}
+
+/* REMOVE TYPING */
+
+function removeTyping(element) {
+    if (element && element.parentNode) {
+        element.remove();
+    }
+}
+
+/* AUTO SCROLL */
+
+function scrollToBottom() {
+    requestAnimationFrame(() => {
+        chatContainer.scrollTo({
+            top: chatContainer.scrollHeight,
+            behavior: 'smooth'
+        });
+    });
 }
