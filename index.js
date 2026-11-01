@@ -4,7 +4,7 @@ const sendButton = document.getElementById('send-button');
 const buttonIcon = document.getElementById('button-icon');
 const info = document.querySelector('.info');
 
-const API_URL = 'https://chatbot-api-gatha.akunalt2727.workers.dev';
+const API_URL = 'https://chatbot-api-gatha.akunalt2727.workers.dev/';
 
 let isLoading = false;
 
